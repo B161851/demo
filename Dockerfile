@@ -15,8 +15,11 @@ RUN npm install
 # Copy the rest of the application
 COPY . .
 
-# Use the environment variable in the Angular build process directly
-RUN npm run build --configuration production --publicKey=$PUBLIC_KEY
+# Run the prebuild script to replace the publicKey in the environment.prod.ts file
+RUN npm run prebuild
+
+# Build the Angular application
+RUN npm run build --configuration production
 
 # Use a lightweight server to serve the built Angular app
 FROM nginx:alpine

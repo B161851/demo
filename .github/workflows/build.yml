@@ -1,4 +1,4 @@
-name: Build and Deploy Angular with Docker
+name: Build and Deploy
 
 on:
   push:
@@ -13,23 +13,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Cache Docker layers
-        uses: actions/cache@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          path: ~/.cache/docker
-          key: ${{ runner.os }}-docker-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-docker-
+          node-version: '16'
 
-      - name: Build Docker image
+      - name: Install dependencies
         run: |
-          docker build \
-            --build-arg PUBLIC_KEY="${{ secrets.PUBLIC_KEY }}" \
-            -t your-image-name .
+          npm install
 
-      - name: Push Docker image to Docker Hub
+      - name: Set the PUBLIC_KEY environment variable
+        run: echo "PUBLIC_KEY=${{ secrets.PUBLIC_KEY }}" >> $GITHUB_ENV
+
+      - name: Run prebuild script to inject the publicKey
+        run: npm run prebuild
+
+      - name: Build the Docker image
         run: |
-          docker push your-image-name
+          docker build --build-arg PUBLIC_KEY=${{ secrets.PUBLIC_KEY }} -t your-image-name .

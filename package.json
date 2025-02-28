@@ -2,6 +2,8 @@
   "name": "my-angular-project",
   "version": "0.0.0",
   "scripts": {
+    "prebuild": "ts-node replace-env-vars.ts",
+    "build": "ng build --configuration production",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
