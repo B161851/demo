@@ -1,24 +1,28 @@
-// replace-env-vars.ts
 import * as fs from 'fs';
 import * as path from 'path';
 
-const environmentPath = path.join(__dirname, 'src', 'environments', 'environment.prod.ts');
+// Define the path to the environment.prod.ts file
+const envFilePath = path.join(__dirname, 'src', 'environments', 'environment.prod.ts');
 
-// Retrieve the PUBLIC_KEY from the environment variables (set by GitHub Secrets)
-const publicKey = process.env['PUBLIC_KEY'];
+// Check if the file exists
+if (fs.existsSync(envFilePath)) {
+  // Read the content of environment.prod.ts
+  let envFileContent = fs.readFileSync(envFilePath, 'utf8');
 
-if (!publicKey) {
-  console.error('PUBLIC_KEY environment variable is not set!');
-  process.exit(1); // Exit the script if the key is not set
+  // Replace the placeholder with the actual public key from the environment variable
+  const publicKey = process.env['PUBLIC_KEY']; // Use bracket notation
+  if (publicKey) {
+    envFileContent = envFileContent.replace('publicKey: ""', `publicKey: "${publicKey}"`);
+  } else {
+    console.error('PUBLIC_KEY environment variable is not set!');
+    process.exit(1); // Exit with an error code if PUBLIC_KEY is missing
+  }
+
+  // Write the updated content back to the file
+  fs.writeFileSync(envFilePath, envFileContent, 'utf8');
+
+  console.log('Environment variables have been replaced successfully.');
+} else {
+  console.error('environment.prod.ts file not found!');
+  process.exit(1); // Exit with an error code if the file does not exist
 }
-
-// Read the environment file content
-let content = fs.readFileSync(environmentPath, 'utf8');
-
-// Replace the placeholder with the actual value of the PUBLIC_KEY
-content = content.replace('REPLACE_PUBLIC_KEY', publicKey);
-
-// Write the modified content back to the environment file
-fs.writeFileSync(environmentPath, content, 'utf8');
-
-console.log('PUBLIC_KEY injected into environment.prod.ts');

@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
-  publicKey: REPLACE_PUBLIC_KEY,  // Use bracket notation to access the environment variable
+  production: true,
+  publicKey: process.env['PUBLIC_KEY'],  // Public key from the environment variable injected by the build process
 };

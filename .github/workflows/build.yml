@@ -13,9 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install OpenSSH
-        run: sudo apt-get update && sudo apt-get install -y openssh-client
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -24,14 +21,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Ensure ts-node is available for running the prebuild script
-      - name: Install ts-node and TypeScript
-        run: npm install ts-node typescript --save-dev
-
-      # Run prebuild script to inject the publicKey into environment.prod.ts
+      # Ensure the PUBLIC_KEY is available for the build process
       - name: Run prebuild script to inject the publicKey into environment.prod.ts
         env:
-          OPENSSH: ${{ secrets.OPENSSH }}
           PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
         run: npm run prebuild
 
