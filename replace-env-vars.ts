@@ -1,5 +1,4 @@
-import * as path from 'path';
-
+const path = require('path');
 const fs = require('fs');
 // Define the path to the environment.prod.ts file
 const envFilePath = path.join(__dirname, 'src', 'environments', 'environment.prod.ts');
