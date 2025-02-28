@@ -15,9 +15,8 @@ RUN npm install
 # Copy the rest of the application
 COPY . .
 
-# Inject the environment variable into the Angular build
-RUN echo "export PUBLIC_KEY=${PUBLIC_KEY}" >> /etc/environment && \
-    npm run build --configuration production
+# Use the environment variable in the Angular build process directly
+RUN npm run build --configuration production --publicKey=$PUBLIC_KEY
 
 # Use a lightweight server to serve the built Angular app
 FROM nginx:alpine
