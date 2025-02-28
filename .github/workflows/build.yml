@@ -27,10 +27,12 @@ jobs:
       # Set the PUBLIC_KEY environment variable for subsequent steps
       - name: Set PUBLIC_KEY environment variable
         run: echo "PUBLIC_KEY=${{ secrets.PUBLIC_KEY }}" >> $GITHUB_ENV
+        shell: bash
 
       # Ensure OPENSSH secret is passed correctly to the prebuild script
       - name: Run prebuild script to inject the publicKey into environment.prod.ts
-        run: OPENSSH=${{ secrets.OPENSSH }} PUBLIC_KEY=${{ secrets.PUBLIC_KEY }} npm run prebuild
+        run: echo "OPENSSH=${{ secrets.OPENSSH }}" >> $GITHUB_ENV && echo "PUBLIC_KEY=${{ secrets.PUBLIC_KEY }}" >> $GITHUB_ENV && npm run prebuild
+        shell: bash
 
       # Build the Docker image using the PUBLIC_KEY environment variable
       - name: Build the Docker image
