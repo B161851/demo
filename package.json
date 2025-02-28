@@ -6,7 +6,6 @@
     "build": "ng build --configuration production",
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:my-angular-project": "node dist/my-angular-project/server/server.mjs"
