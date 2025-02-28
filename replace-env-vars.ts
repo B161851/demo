@@ -5,7 +5,7 @@ import * as path from 'path';
 const environmentPath = path.join(__dirname, 'src', 'environments', 'environment.prod.ts');
 
 // Retrieve the PUBLIC_KEY from the environment variables (set by GitHub Secrets)
-const publicKey = process.env.PUBLIC_KEY;
+const publicKey = process.env['PUBLIC_KEY'];
 
 if (!publicKey) {
   console.error('PUBLIC_KEY environment variable is not set!');
