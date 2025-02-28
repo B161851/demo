@@ -13,6 +13,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install OpenSSH
+        run: sudo apt-get update && sudo apt-get install -y openssh-client
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -21,10 +24,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Pass the PUBLIC_KEY secret directly into the prebuild step
-      - name: Run prebuild script to inject the publicKey into environment.prod.ts
-        run: PUBLIC_KEY=${{ secrets.PUBLIC_KEY }} npm run prebuild
+      # Set the PUBLIC_KEY environment variable for subsequent steps
+      - name: Set PUBLIC_KEY environment variable
+        run: echo "PUBLIC_KEY=${{ secrets.PUBLIC_KEY }}" >> $GITHUB_ENV
 
-      # Build the Docker image using the PUBLIC_KEY secret directly
+      # Ensure OPENSSH secret is passed correctly to the prebuild script
+      - name: Run prebuild script to inject the publicKey into environment.prod.ts
+        run: OPENSSH=${{ secrets.OPENSSH }} PUBLIC_KEY=${{ secrets.PUBLIC_KEY }} npm run prebuild
+
+      # Build the Docker image using the PUBLIC_KEY environment variable
       - name: Build the Docker image
         run: docker build --build-arg PUBLIC_KEY=${{ secrets.PUBLIC_KEY }} -t your-image-name .
