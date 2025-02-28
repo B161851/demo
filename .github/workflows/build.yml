@@ -19,15 +19,12 @@ jobs:
           node-version: '16'
 
       - name: Install dependencies
-        run: |
-          npm install
+        run: npm install
 
-      - name: Set the PUBLIC_KEY environment variable
-        run: echo "PUBLIC_KEY=${{ secrets.PUBLIC_KEY }}" >> $GITHUB_ENV
+      # Pass the PUBLIC_KEY secret directly into the prebuild step
+      - name: Run prebuild script to inject the publicKey into environment.prod.ts
+        run: PUBLIC_KEY=${{ secrets.PUBLIC_KEY }} npm run prebuild
 
-      - name: Run prebuild script to inject the publicKey
-        run: npm run prebuild
-
+      # Build the Docker image using the PUBLIC_KEY secret directly
       - name: Build the Docker image
-        run: |
-          docker build --build-arg PUBLIC_KEY=${{ secrets.PUBLIC_KEY }} -t your-image-name .
+        run: docker build --build-arg PUBLIC_KEY=${{ secrets.PUBLIC_KEY }} -t your-image-name .
