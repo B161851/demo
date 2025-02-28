@@ -24,7 +24,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Run prebuild script and pass PUBLIC_KEY and OPENSSH directly as environment variables
+      # Ensure ts-node is available for running the prebuild script
+      - name: Install ts-node and TypeScript
+        run: npm install ts-node typescript --save-dev
+
+      # Run prebuild script to inject the publicKey into environment.prod.ts
       - name: Run prebuild script to inject the publicKey into environment.prod.ts
         env:
           OPENSSH: ${{ secrets.OPENSSH }}
