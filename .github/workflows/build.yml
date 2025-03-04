@@ -21,14 +21,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Ensure the PUBLIC_KEY is available for the build process
+      - name: Debug: Show environment variable PUBLIC_KEY
+        run: echo "PUBLIC_KEY is set."
+
       - name: Run prebuild script to inject the publicKey into environment.prod.ts
         env:
           PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
         run: npm run prebuild
 
-      # Build the Docker image using the PUBLIC_KEY environment variable
       - name: Build the Docker image
         env:
           PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
-        run: docker build --build-arg PUBLIC_KEY=${{ secrets.PUBLIC_KEY }} -t your-image-name .
+        run: |
+          echo "Building Docker image with PUBLIC_KEY=${{ secrets.PUBLIC_KEY }}"
+          docker build --build-arg PUBLIC_KEY=${{ secrets.PUBLIC_KEY }} -t your-image-name .
