@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Debug: Show environment variable PUBLIC_KEY
+      - name: Show environment variable PUBLIC_KEY
         run: echo "PUBLIC_KEY is set."
 
       - name: Run prebuild script to inject the publicKey into environment.prod.ts
